@@ -16,10 +16,13 @@ function createTag(req, res) {
     
     tagController.createTag(tag)
     .then(function(response) {
-        res.status(200).end();
+        if (response.status !== 201) {
+            res.send({status: 501, message: "Save to database failed"});
+        } 
+        res.status(response.status).end();
     })
     .catch(function(err) {
-        console.log(JSON.stringify(err));
+        console.log(err);
         res.send(err).end();
     });
 }
