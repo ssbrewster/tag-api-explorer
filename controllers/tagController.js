@@ -14,6 +14,7 @@ function tagController() {
     };
 
     function createTag(tag) {
+        var tagInArray;
 
         return Tag.findOneAndUpdate({}, {}, { 
             upsert: true, new: true 
@@ -22,9 +23,19 @@ function tagController() {
             doc.tags.push(tag);
             return doc.save();
         })
+        .then(function(savedDoc) {
+            tagInArray = savedDoc.tags.find(function(tagObj) {
+                return tagObj.tag == tag.tag;
+            }); 
+
+            if (!tagInArray) {
+                throw new Error({status: 501, message: "Save to database failed"}); 
+            }
+            return ({status: 201});
+        })
         .catch(function(err) {
             console.error(err);
-            throw new Error({status: 501, message: "Save failed"});
+            throw new Error({status: 501, message: "Save to database failed"});
         });
     }
 
