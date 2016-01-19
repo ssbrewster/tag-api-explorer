@@ -30,7 +30,9 @@ Should return a `200 OK` response
 
 ### Retrieve a single tag
 
-`curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/tags/tshirt`
+```
+curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/tags/tshirt
+```
 
 Should return the tag as a json object e.g.
 
@@ -45,5 +47,7 @@ Should return the tag as a json object e.g.
 
 ### Retrieve all tags currently stored in the database
 
-`curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/current`
+```
+curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/current
+```
 
