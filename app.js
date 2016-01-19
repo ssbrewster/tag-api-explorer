@@ -1,14 +1,13 @@
 /*jshint node:true*/
 'use strict';
 
-var express = require('./config/express.js');
+var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var http = require('http');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 app.use('/api', require('./routes'));
 
 console.log('About to crank up node');
