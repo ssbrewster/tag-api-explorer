@@ -20,13 +20,13 @@ Then run `node app.js` from the project root directory to run the app on http://
 
 ## Examples
 
-1. Store a single tag
+### Store a single tag
 
 `curl -H "Content-Type: application/json" -X POST -d '{"tag": "tshirt", "relevance": 5}' http://localhost:3000/api/tags`
 
 Should return a `200 OK` response
 
-2. Retrieve a single tag
+### Retrieve a single tag
 
 `curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/tags/tshirt`
 
@@ -41,7 +41,7 @@ Should return the tag as a json object e.g.
 ```
 > each time a tag is searched for its relevance increases by one
 
-3. Retrieve all tags currently stored in the database
+### Retrieve all tags currently stored in the database
 
 `curl -i -H "Content-Type: application/json" -X GET http://localhost:3000/api/current`
 
