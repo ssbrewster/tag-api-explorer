@@ -22,7 +22,9 @@ Then run `node app.js` from the project root directory to run the app on http://
 
 ### Store a single tag
 
-`curl -H "Content-Type: application/json" -X POST -d '{"tag": "tshirt", "relevance": 5}' http://localhost:3000/api/tags`
+```
+curl -H "Content-Type: application/json" -X POST -d '{"tag": "tshirt", "relevance": 5}' http://localhost:3000/api/tags
+```
 
 Should return a `200 OK` response
 
