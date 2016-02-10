@@ -5,8 +5,8 @@ var router = require('express').Router(),
 mongoose.Promise = global.Promise;
 
 router.post('/tags', createTag);
-router.get('/tags/:tagName', retrieveTag);
-router.get('/current', retrieveAllTags);
+router.get('/tags/:tagName', getOneTag);
+router.get('/current', getAllTags);
 
 function createTag(req, res) {
     if (!req.body) {
@@ -16,10 +16,7 @@ function createTag(req, res) {
     
     tagController.createTag(tag)
     .then(function(response) {
-        if (response.status !== 201) {
-            res.send({status: 501, message: "Save to database failed"});
-        } 
-        res.status(response.status).end();
+        res.json(response).end();
     })
     .catch(function(err) {
         console.log(err);
@@ -27,24 +24,24 @@ function createTag(req, res) {
     });
 }
 
-function retrieveTag(req, res) {
+function getOneTag(req, res) {
     if (!req.params) {
         throw new Error('Expected a tag name but instead got ' + req.params);
     }
 
     var tagName = req.params.tagName;
 
-    tagController.retrieveTag(tagName)
+    tagController.getOneTag(tagName)
     .then(function(tag) {
-        res.json(tag);
+        res.json(tag.tags[0]);
     })
     .catch(function(err) {
         res.send(err).end();
     });
 }
 
-function retrieveAllTags(req, res) {
-    tagController.retrieveAllTags()
+function getAllTags(req, res) {
+    tagController.getAllTags()
     .then(function(tags) {
         res.json(tags);
     })
