@@ -5,8 +5,8 @@ var router = require('express').Router(),
 mongoose.Promise = global.Promise;
 
 router.post('/tags', createTag);
-router.get('/tags/:tagName', retrieveTag);
-router.get('/current', retrieveAllTags);
+router.get('/tags/:tagName', getOneTag);
+router.get('/current', getAllTags);
 
 function createTag(req, res) {
     if (!req.body) {
@@ -15,42 +15,26 @@ function createTag(req, res) {
     var tag = req.body;
     
     tagController.createTag(tag)
-    .then(function(response) {
-        if (response.status !== 201) {
-            res.send({status: 501, message: "Save to database failed"});
-        } 
-        res.status(response.status).end();
-    })
-    .catch(function(err) {
-        console.log(err);
-        res.send(err).end();
-    });
+    .then(response => res.json(response).end())
+    .catch(err => res.send(err).end());
 }
 
-function retrieveTag(req, res) {
+function getOneTag(req, res) {
     if (!req.params) {
         throw new Error('Expected a tag name but instead got ' + req.params);
     }
 
     var tagName = req.params.tagName;
 
-    tagController.retrieveTag(tagName)
-    .then(function(tag) {
-        res.json(tag);
-    })
-    .catch(function(err) {
-        res.send(err).end();
-    });
+    tagController.getOneTag(tagName)
+    .then(tag => res.json(tag.tags[0]))
+    .catch(err => res.send(err).end());
 }
 
-function retrieveAllTags(req, res) {
-    tagController.retrieveAllTags()
-    .then(function(tags) {
-        res.json(tags);
-    })
-    .catch(function(err) {
-        res.send(err).end();
-    });
+function getAllTags(req, res) {
+    tagController.getAllTags()
+    .then(tags => res.json(tags))
+    .catch(err => res.send(err).end());
 }
 
 module.exports = router;
