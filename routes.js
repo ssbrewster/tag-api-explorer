@@ -15,13 +15,8 @@ function createTag(req, res) {
     var tag = req.body;
     
     tagController.createTag(tag)
-    .then(function(response) {
-        res.json(response).end();
-    })
-    .catch(function(err) {
-        console.log(err);
-        res.send(err).end();
-    });
+    .then(response => res.json(response).end())
+    .catch(err => res.send(err).end());
 }
 
 function getOneTag(req, res) {
@@ -32,22 +27,14 @@ function getOneTag(req, res) {
     var tagName = req.params.tagName;
 
     tagController.getOneTag(tagName)
-    .then(function(tag) {
-        res.json(tag.tags[0]);
-    })
-    .catch(function(err) {
-        res.send(err).end();
-    });
+    .then(tag => res.json(tag.tags[0]))
+    .catch(err => res.send(err).end());
 }
 
 function getAllTags(req, res) {
     tagController.getAllTags()
-    .then(function(tags) {
-        res.json(tags);
-    })
-    .catch(function(err) {
-        res.send(err).end();
-    });
+    .then(tags => res.json(tags))
+    .catch(err => res.send(err).end());
 }
 
 module.exports = router;
