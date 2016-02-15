@@ -32,13 +32,8 @@ function getOneTag(req, res) {
 }
 
 function getAllTags(req, res) {
-    var sortBy;
-
     if (req.query.sortby) {
-        sortBy = req.query.sortby;
-    }
-    else {
-        sortBy = false;
+        var sortBy = req.query.sortby;
     }
 
     tagController.getAllTags(sortBy)
