@@ -32,7 +32,11 @@ function getOneTag(req, res) {
 }
 
 function getAllTags(req, res) {
-    tagController.getAllTags()
+    if (req.query.sortby) {
+        var sortBy = req.query.sortby;
+    }
+
+    tagController.getAllTags(sortBy)
     .then(tags => res.json(tags))
     .catch(err => res.send(err).end());
 }

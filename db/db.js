@@ -1,4 +1,5 @@
 // TODO: tidy up promise chanins by using shallow chains
+'use strict';
 var db = require('../db/db.js'),
     mongoose = require('mongoose'),
     Tag = require('../models/tags.model.js');
@@ -53,8 +54,20 @@ module.exports = {
                 }
             }).exec();
     },
-    retrieveAllTags: function() {
-        return Tag.find().exec();
+    retrieveAllTags: (sortBy) => {
+        // TODO: replace default param style used below with 
+        // ES6 default function params when they are enabled
+        // in nodejs v6
+        sortBy = typeof sortBy == 'undefined' ? 'tag' : sortBy;
+        var sortPath = 'tags.' + sortBy;
+        var sortExpr = {};
+        sortExpr[sortPath] = 1;
+
+        return Tag.aggregate()
+            .unwind('tags')
+            .sort(sortExpr)
+            .group({_id:'$_id', tags: {$push:'$tags'}})
+            .exec();
     }
 };
 
