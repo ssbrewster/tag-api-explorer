@@ -1,6 +1,7 @@
-// TODO: tidy up promise chanins by using shallow chains
+/*jslint node: true */
 'use strict';
-var db = require('../db/db.js'),
+var async = require('../utils/async.js'),
+    db = require('../db/db.js'),
     mongoose = require('mongoose'),
     Tag = require('../models/tags.model.js');
 
@@ -10,28 +11,29 @@ var db = mongoose.connect('mongodb://localhost:27017/');
 db.connection.on('error', console.error.bind(console, 'DB connection error.'));
 
 module.exports = {
-    createTag: function(tag) {
-        var tagInArray;
+    createTag: async(function*(tag) {
+        var doc,
+            findTagInArray,
+            savedDoc,
+            tagInArray;
 
-        return Tag.findOneAndUpdate({}, {}, { 
-            upsert: true, new: true 
-        }).exec()
-        .then(function(doc) {
+        try {
+            doc = yield Tag.findOneAndUpdate({}, {}, { 
+                upsert: true, new: true 
+            }).exec();
             doc.tags.push(tag);
-            return doc.save();
-        })
-        .then(function(savedDoc) {
-            tagInArray = savedDoc.tags.find(function(tagObj) {
-                return tagObj.tag == tag.tag;
-            }); 
+            savedDoc = yield doc.save();
+
+            findTagInArray = yield savedDoc.tags.find(tag);
+            tagInArray = findTagInArray.tag == tag.tag;
 
             return tagInArray ? tagInArray : 'Failed to create a tag'; 
-        })
-        .catch(function(err) {
-            console.error(err);
+        }
+        catch (e) {
+            console.error(e);
             throw new Error({status: 501, message: "Save to database failed"});
-        });
-    },
+        }
+    }),
     retrieveTag: function(tagName) {
 
         return Tag.findOneAndUpdate(
